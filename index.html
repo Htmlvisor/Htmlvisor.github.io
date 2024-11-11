@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor y Visor HTML Interactivo</title>
+    <title>Editor y Visor HTML Profesional</title>
 
     <!-- Estilos básicos -->
     <style>
@@ -19,110 +19,119 @@
             font-family: 'Arial', sans-serif;
             background-color: #f0f0f5;
             display: flex;
-            height: 100vh;
-            justify-content: flex-start;
-            align-items: stretch;
-            overflow: hidden;
             flex-direction: column;
-            padding: 0;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
         /* Contenedor principal */
         .container {
             display: flex;
-            width: 100%;
-            height: 100%;
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
         /* Sidebar con editor y ayuda */
         .sidebar {
-            width: 300px;
+            width: 40%;
             background-color: #333;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
             height: 100%;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: relative;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar.closed {
-            transform: translateX(-100%);
+            overflow-y: auto;
         }
 
         /* Botón para abrir/cerrar el sidebar */
         .toggle-btn {
-            background-color: #222;
-            border: none;
+            background-color: #444;
             color: white;
             font-size: 18px;
             cursor: pointer;
-            padding: 10px;
+            padding: 12px;
+            border: none;
             margin-bottom: 20px;
-            border-radius: 5px;
             text-align: center;
+            border-radius: 5px;
             width: 100%;
+            font-weight: bold;
         }
 
         .toggle-btn:hover {
-            background-color: #444;
+            background-color: #555;
         }
 
-        /* Editor de texto HTML */
-        .editor {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #fff;
-            border-left: 2px solid #ccc;
-            font-size: 16px;
+        /* Título y descripción */
+        h2 {
+            margin-bottom: 10px;
+            font-size: 22px;
+            text-align: center;
         }
 
-        /* Estilo del editor, haciendo que el contenido sea editable */
-        .editor div[contenteditable="true"] {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f4f7fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            outline: none;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow: auto;
-            min-height: 300px;
-        }
-
-        /* Vista previa */
-        .preview-container {
-            flex: 2;
+        /* Área de texto (editor HTML) */
+        .editor-container {
             position: relative;
-            background-color: #fff;
+            width: 100%;
+        }
+
+        .editor {
+            width: 100%;
+            height: 60vh;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            background-color: #f4f7fa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            line-height: 1.5;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        /* Área de vista previa */
+        .preview-container {
+            width: 60%;
             padding: 20px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
         }
 
         .preview {
             width: 100%;
             height: 100%;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             background-color: #f9f9f9;
-            padding: 10px;
-            overflow: auto;
+            padding: 20px;
             font-family: 'Arial', sans-serif;
+            color: #333;
         }
 
-        /* Información de instrucciones */
+        /* Línea de numeración */
+        .line-numbers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            background-color: #eee;
+            color: #888;
+            text-align: right;
+            padding-right: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            border-right: 1px solid #ccc;
+        }
+
+        /* Información adicional */
         .info-panel {
             background-color: #444;
             color: white;
@@ -148,6 +157,8 @@
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
+                height: auto;
+                padding: 20px;
             }
 
             .sidebar {
@@ -155,8 +166,9 @@
             }
 
             .preview-container {
-                height: 300px;
                 width: 100%;
+                height: 300px;
+                margin-top: 20px;
             }
         }
     </style>
@@ -171,9 +183,12 @@
 
     <div class="container">
         <!-- Sidebar con editor y ayuda -->
-        <div id="sidebar" class="sidebar closed">
+        <div id="sidebar" class="sidebar">
             <h2>Editor HTML</h2>
-            <div id="editor" contenteditable="true" oninput="updatePreview()" placeholder="Escribe tu código HTML aquí..."></div>
+            <div class="editor-container">
+                <pre id="line-numbers" class="line-numbers"></pre>
+                <textarea id="editor" class="editor" oninput="updatePreview()" placeholder="Escribe tu código HTML aquí..."></textarea>
+            </div>
 
             <!-- Información adicional -->
             <div class="info-panel">
@@ -202,20 +217,18 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const button = document.querySelector('.toggle-btn');
-            if (sidebar.classList.contains('closed')) {
-                sidebar.classList.remove('closed');
-                sidebar.classList.add('open');
+            if (sidebar.style.display === 'none') {
+                sidebar.style.display = 'block';
                 button.innerText = 'Cerrar Editor';
             } else {
-                sidebar.classList.remove('open');
-                sidebar.classList.add('closed');
+                sidebar.style.display = 'none';
                 button.innerText = 'Abrir Editor';
             }
         }
 
         // Función para actualizar la vista previa
         function updatePreview() {
-            const editorContent = document.getElementById('editor').innerHTML;
+            const editorContent = document.getElementById('editor').value;
             const previewContainer = document.getElementById('preview');
 
             // Actualizar la vista previa con el contenido HTML
@@ -224,12 +237,29 @@
             // Resaltado de sintaxis en el editor (usando Prism.js)
             const highlightedCode = Prism.highlight(editorContent, Prism.languages.html, 'html');
             document.getElementById('editor').innerHTML = highlightedCode;
+
+            // Actualizar líneas de numeración
+            updateLineNumbers(editorContent);
         }
 
-        // Resaltar el contenido inicial (si hay algo en el editor)
+        // Función para actualizar las líneas de numeración
+        function updateLineNumbers(content) {
+            const lineNumbers = document.getElementById('line-numbers');
+            const lineCount = content.split('\n').length;
+            let lines = '';
+
+            for (let i = 1; i <= lineCount; i++) {
+                lines += i + '\n';
+            }
+
+            lineNumbers.textContent = lines;
+        }
+
+        // Inicializar la vista previa al cargar
         document.addEventListener('DOMContentLoaded', () => {
             updatePreview();
         });
     </script>
 </body>
 </html>
+
