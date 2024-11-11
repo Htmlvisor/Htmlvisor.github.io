@@ -24,13 +24,14 @@
             align-items: stretch;
             overflow: hidden;
             flex-direction: column;
+            padding: 0;
         }
 
         /* Contenedor principal */
         .container {
             display: flex;
             width: 100%;
-            height: calc(100vh - 50px);
+            height: 100%;
             overflow: hidden;
         }
 
@@ -46,6 +47,7 @@
             height: 100%;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             overflow-y: auto;
+            position: relative;
         }
 
         .sidebar.open {
@@ -67,6 +69,7 @@
             margin-bottom: 20px;
             border-radius: 5px;
             text-align: center;
+            width: 100%;
         }
 
         .toggle-btn:hover {
@@ -80,20 +83,23 @@
             overflow-y: auto;
             background-color: #fff;
             border-left: 2px solid #ccc;
+            font-size: 16px;
         }
 
-        /* Resaltado de sintaxis */
-        .editor textarea {
+        /* Estilo del editor, haciendo que el contenido sea editable */
+        .editor div[contenteditable="true"] {
             width: 100%;
             height: 100%;
             padding: 20px;
-            font-size: 16px;
-            border: none;
-            outline: none;
-            border-radius: 5px;
-            resize: none;
-            background-color: #f4f7fa;
             font-family: 'Courier New', Courier, monospace;
+            background-color: #f4f7fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: auto;
+            min-height: 300px;
         }
 
         /* Vista previa */
@@ -116,23 +122,19 @@
             font-family: 'Arial', sans-serif;
         }
 
-        /* Sección de explicación de etiquetas */
+        /* Información de instrucciones */
         .info-panel {
             background-color: #444;
             color: white;
             padding: 15px;
             border-radius: 5px;
             margin-top: 20px;
+            font-size: 14px;
         }
 
         .info-panel h3 {
             margin-bottom: 10px;
             font-size: 18px;
-        }
-
-        .info-panel p {
-            font-size: 14px;
-            line-height: 1.5;
         }
 
         .info-panel code {
@@ -142,7 +144,7 @@
             border-radius: 5px;
         }
 
-        /* Mejora en la visualización para móviles */
+        /* Diseño responsivo */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -171,7 +173,7 @@
         <!-- Sidebar con editor y ayuda -->
         <div id="sidebar" class="sidebar closed">
             <h2>Editor HTML</h2>
-            <textarea id="editor" oninput="updatePreview()" placeholder="Escribe tu código HTML aquí..."></textarea>
+            <div id="editor" contenteditable="true" oninput="updatePreview()" placeholder="Escribe tu código HTML aquí..."></div>
 
             <!-- Información adicional -->
             <div class="info-panel">
@@ -196,7 +198,7 @@
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
 
     <script>
-        // Función para abrir y cerrar el sidebar.
+        // Función para abrir y cerrar el sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const button = document.querySelector('.toggle-btn');
@@ -213,10 +215,10 @@
 
         // Función para actualizar la vista previa
         function updatePreview() {
-            const editorContent = document.getElementById('editor').value;
+            const editorContent = document.getElementById('editor').innerHTML;
             const previewContainer = document.getElementById('preview');
 
-            // Usar innerHTML para visualizar el HTML
+            // Actualizar la vista previa con el contenido HTML
             previewContainer.innerHTML = editorContent;
 
             // Resaltado de sintaxis en el editor (usando Prism.js)
